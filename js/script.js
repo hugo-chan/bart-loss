@@ -14,8 +14,8 @@ var maxRand;
 var balloonImageList = ["blueBalloon.png", "redBalloon.png", "greenBalloon.png"];
 var balloonImage;
 var trialList = [];
-var numOfTrials = 1;
-// var numOfTrials = 8;
+// var numOfTrials = 1;
+var numOfTrials = 8;
 var trialTypeIndex;
 var trialIndex = 0;
 // Balloons
