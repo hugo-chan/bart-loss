@@ -14,7 +14,7 @@ var maxRand;
 var balloonImageList = ["blueBalloon.png", "redBalloon.png", "greenBalloon.png"];
 var balloonImage;
 var trialList = [];
-var numOfTrials = 6;
+var numOfTrials = 8;
 var trialTypeIndex;
 var trialIndex = 0;
 // Balloons
@@ -144,6 +144,7 @@ function updateGameUI() {
 	// document.getElementById("earning_by_pump").innerHTML = "Max pumps = " + maxPumps + ", numPumps = " + numPumps;
 	document.getElementById("game_total_current_earning").innerHTML = "Total earned : $" + totalcurrentEarning.toFixed(2);
 	document.getElementById("game_last_balloon_earning").innerHTML = "Last balloon : $" + lastBalloonEarning.toFixed(2);
+	document.getElementById("remaining_balloons").innerHTML = "Remaining Balloons : " + (numOfTrials - trialIndex + 1).toString();
 }
 
 function buttonClickedPumpBalloon() {
