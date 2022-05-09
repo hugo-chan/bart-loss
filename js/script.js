@@ -109,17 +109,8 @@ function buttonClickedSendID() {
 	if(pID == -1)
 	{
 		pID = enteredpID;
-		document.getElementById("enterID").innerHTML = "Please re-enter your ID number to confirm:"
-		document.getElementById("id_number").value = "";
-	} else if(enteredpID == pID) {
-		// If ID is valid, go to next part
 		date_experience_start = new Date();
 		displayPart2();
-	} else {
-		alert("ID numbers do not match. Please verify your ID number.");
-		pID = -1;
-		document.getElementById("enterID").innerHTML = "Please enter your ID number:"
-		document.getElementById("id_number").value = "";
 	}
 }
 
