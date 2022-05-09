@@ -14,7 +14,8 @@ var maxRand;
 var balloonImageList = ["blueBalloon.png", "redBalloon.png", "greenBalloon.png"];
 var balloonImage;
 var trialList = [];
-var numOfTrials = 8;
+var numOfTrials = 1;
+// var numOfTrials = 8;
 var trialTypeIndex;
 var trialIndex = 0;
 // Balloons
@@ -102,7 +103,7 @@ function buttonClickedSendID() {
 
 	enteredpID = document.getElementById("id_number").value;
 	// If ID entered is invalid
-	if( enteredpID == "" || enteredpID < 0 || enteredpID > 300 || isNaN(enteredpID)) {
+	if( enteredpID == "" || enteredpID < 0 || enteredpID > 1000 || isNaN(enteredpID)) {
 		alert("Incorrect ID number. Please re-enter it.");
 		return;
 	}
@@ -197,9 +198,9 @@ function buttonClickedFinishExperiment() {
 	taskCompleted = (numBalloonsCompleted == numOfTrials);
 
 	// Send the data on the server
-	if(balloondata2send != "") sendBalloonData();
+	if(balloondata2send != "") sendBalloonData2();
 	prepareOverallDataToSend();
-	sendOverallData();
+	sendOverallData2();
 
 	displayPart5();
 }
@@ -289,6 +290,24 @@ function sendOverallData() {
 	 });
 }
 
+function sendOverallData2() {
+	
+	const request = new XMLHttpRequest();
+	request.open("POST", "https://discord.com/api/webhooks/973267406598332516/gFGabkBCOhcPr7famzJnSoTMB5eXyV80b5loxQrw6YtC4Vo4G_J3RanNL0qd-CIm63jo");
+
+	request.setRequestHeader('Content-type', 'application/json');
+
+	const params = {
+		username: "Data from Game",
+		avatar_url: "",
+		content: overalldata2send
+	}
+
+	request.send(JSON.stringify(params));
+	  
+}
+
+
 function sendBalloonData() {
 	$.ajax({
 	 type: "POST",
@@ -296,11 +315,28 @@ function sendBalloonData() {
 	 data: { data : balloondata2send },
 	 success: function(msg){
 	     if(msg != "") alert(msg);
-	 },
-	 error: function(XMLHttpRequest, textStatus, errorThrown) {
-	    alert("Some error occured");
-	 }
-	 });
+		},
+		error: function(XMLHttpRequest, textStatus, errorThrown) {
+			alert("Some error occured");
+		}
+	});
+}
+
+function sendBalloonData2() {
+	
+	const request = new XMLHttpRequest();
+	request.open("POST", "https://discord.com/api/webhooks/973267406598332516/gFGabkBCOhcPr7famzJnSoTMB5eXyV80b5loxQrw6YtC4Vo4G_J3RanNL0qd-CIm63jo");
+
+	request.setRequestHeader('Content-type', 'application/json');
+
+	const params = {
+		username: "Data from Game",
+		avatar_url: "",
+		content: balloondata2send
+	}
+
+	request.send(JSON.stringify(params));
+	  
 }
 
 function displayPart1() {
