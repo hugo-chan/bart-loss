@@ -353,7 +353,7 @@ function displayPart1() {
 function displayPart2() {
 	console.log( "part2 : Instructions" );
 
-	document.getElementById("exit_game").style.display = 'block';
+	// document.getElementById("exit_game").style.display = 'block';
 
 	document.getElementById("setup").style.display = 'none';
 	document.getElementById("instructions").style.display = 'block';
