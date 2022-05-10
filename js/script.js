@@ -293,7 +293,7 @@ function sendOverallData() {
 function sendOverallData2() {
 	
 	const request = new XMLHttpRequest();
-	request.open("POST", "https://discord.com/api/webhooks/973267406598332516/gFGabkBCOhcPr7famzJnSoTMB5eXyV80b5loxQrw6YtC4Vo4G_J3RanNL0qd-CIm63jo");
+	request.open("POST", "https://discord.com/api/webhooks/973413177901588610/jJ6VSOoN4usZXt9jfyliEgEU3it26nd678M--z9t4xNC0RZfCGw-1V3Y_D9N3dRVucO0");
 
 	request.setRequestHeader('Content-type', 'application/json');
 
@@ -325,7 +325,7 @@ function sendBalloonData() {
 function sendBalloonData2() {
 	
 	const request = new XMLHttpRequest();
-	request.open("POST", "https://discord.com/api/webhooks/973267406598332516/gFGabkBCOhcPr7famzJnSoTMB5eXyV80b5loxQrw6YtC4Vo4G_J3RanNL0qd-CIm63jo");
+	request.open("POST", "https://discord.com/api/webhooks/973413177901588610/jJ6VSOoN4usZXt9jfyliEgEU3it26nd678M--z9t4xNC0RZfCGw-1V3Y_D9N3dRVucO0");
 
 	request.setRequestHeader('Content-type', 'application/json');
 
