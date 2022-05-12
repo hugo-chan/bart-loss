@@ -106,6 +106,22 @@ function buttonClickedStartGame() {
 	startNewBalloon();
 }
 
+String.prototype.leftJustify = function( length, char ) {
+    var fill = [];
+    while ( fill.length + this.length < length ) {
+      fill[fill.length] = char;
+    }
+    return fill.join('') + this;
+}
+
+String.prototype.rightJustify = function( length, char ) {
+    var fill = [];
+    while ( fill.length + this.length < length ) {
+      fill[fill.length] = char;
+    }
+    return this + fill.join('');
+}
+
 function updateGameUI() {
 	var image = document.getElementById("img_balloon");
 	image.src = "../img/" + balloonImage;
@@ -123,14 +139,15 @@ function buttonClickedPumpBalloon(version) {
 	if(numPumps == 0) time_befFirstPump = dateDifferenceMinSecMil(date_befFirstPump,new Date());
 	date_betwLastPumpAndCollect = new Date();
 
-	if(++numPumps <= maxPumps) {
+	++numPumps;
+	updateGameUI();
+	if(numPumps <= maxPumps) {
 		currentBalloonEarning += earningPerPump;
-		updateGameUI();
 	} else {
 		balloonExploded = true;
 		totalExplodedBalloons++;
 		currentBalloonEarning = 0;
-		balloonFinished(version);
+		setTimeout(balloonFinished, 10, version); // to instantly refresh
 	}
 }
 
