@@ -7,7 +7,7 @@
 
       <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
       <title>BUSN 20710: BART</title>
-      <link rel="icon" href="img/blueBalloon.png">
+      <link rel="icon" href="../img/blueBalloon.png">
 
       <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
@@ -33,7 +33,7 @@
       <!-- personnal script -->
 
 
-      <script src="js/script.js" crossorigin="anonymous"></script>
+      <script src="../js/script.js" crossorigin="anonymous"></script>
     </head>
 
     <!-- <body onkeydown="GetKey(event)"> -->
@@ -45,14 +45,6 @@
           <h3>BUSN 20710: Emily Lin and Hugo Chan</h3>
         </div>
         <!-- <div class="col-md-7"></div> -->
-        <div class="col-md-6" align="right">
-          <a href="#" id="exit_game" onclick="buttonClickedExitGame()"> Exit </a>
-<!--             <div class="input-group">
-              <span class="input-group-btn">
-                <button class="btn btn-default" type="button" id="exit_game" onclick="buttonClickedExitGame()">Exit</button>
-              </span>
-            </div> -->
-        </div>
       </div>
 
       <div id="setup" class="container-fluid">
@@ -109,31 +101,33 @@
 
       </div>
 
-
+      <br>
       <div id="game" class="row">
         <div class="col-md-4"></div>
 
         <!-- the game loops -->
         <div id="game_balloon" class="col-md-4">
 
-          <div id="game_total_current_earning"></div>
+          <div id="game_total_current_earning" style="font-size: 20px;"></div>
           <!-- <div id="game_money_per_pump"> Earning per pump : <b id="earning_by_pump"></b> $ </div>  -->
-          <div id="game_last_balloon_earning"></div>
-          <div id="remaining_balloons"></div>
+          <div id="game_last_balloon_earning" style="font-size: 20px;"></div>
+          <div id="game_last_balloon_pumps" style="font-size: 20px;"></div>
+          <div id="game_curr_balloon_pumps" style="font-size: 20px;"></div>
+          <div id="remaining_balloons" style="font-size: 20px;"></div>
 
           <div class="row">
             <div class="col-md-4">
               <div class="input-group">
                 <span class="input-group-btn">
                   <!-- TODO : Ideally, it would be nice to have the 'space bar' and 'return' keys to do those actions. -->
-                  <button class="btn btn-default" type="button" onclick="buttonClickedPumpBalloon()" >Pump</button>
-                  <button class="btn btn-default" type="button" onclick="buttonClickedCollectMoney()" >Collect $$</button>
+                  <button class="btn btn-default" style="font-size: 18px;" type="button" onclick="buttonClickedPumpBalloon(3)" >Pump</button>
+                  <button class="btn btn-default" style="font-size: 18px;" type="button" onclick="buttonClickedCollectMoney(3)" >Collect $$</button>
                 </span>
               </div>
             </div>
           </div>
 
-          <img src="img/redBalloon.png" alt="Balloon Image" id="img_balloon" style="width:50px;height:50px;" class="center-block">
+          <img src="../img/redBalloon.png" alt="Balloon Image" id="img_balloon" style="width:50px;height:50px;" class="center-block">
           <div id="game_balloon_final_earning"></div>
 
         </div>

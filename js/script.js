@@ -2,7 +2,7 @@
 
 var pID = -1;
 // Earnings
-var totalcurrentEarning = 0;
+var totalcurrentEarning = 5;
 var totalFinalEarning = 0;
 var currentBalloonEarning = 0;
 var lastBalloonEarning = 0;
@@ -21,6 +21,7 @@ var maxPumpsList = [5, 7, 4, 8, 9, 4, 5, 5]
 var balloonExploded = false;
 var totalExplodedBalloons = 0;
 var numPumps = 0;
+var lastNumPumps = 0;
 var totalNumPumps = 0;
 var totalNumPumpsForNonExplodedBalloons = 0;
 var numBalloonsCompleted = 0;
@@ -39,6 +40,11 @@ var date_betwLastPumpAndCollect;
 var time_betwLastPumpAndCollect;
 var balloonIndex = 0;
 
+// Case 2
+var explode_penalty = 0.2
+// Case 3
+var explode_penalty_per_pump = 0.05
+
 // Others
 var taskCompleted=0;
 
@@ -52,7 +58,7 @@ $( document ).ready(start);
 function start() {
 	console.log( "ready" );
 
-	displayPart1();
+	displayPart2();
 }
 
 function setBalloonInitialState() {
@@ -62,6 +68,7 @@ function setBalloonInitialState() {
 	balloonIndex++;
 
 	currentBalloonEarning = 0;
+	lastNumPumps = numPumps
 	numPumps = 0;
 	balloonExploded = false;
 	updateGameUI();
@@ -101,16 +108,18 @@ function buttonClickedStartGame() {
 
 function updateGameUI() {
 	var image = document.getElementById("img_balloon");
-	image.src = "img/" + balloonImage;
+	image.src = "../img/" + balloonImage;
 	image.style.width = 'auto';
-	image.style.height = Math.round( 2.0/3.0 * screen.height * (5 + numPumps) / (5.0 + 128.0)) +'px';
+	image.style.height = Math.round( 2.0/3.0 * screen.height * (10 + numPumps) / (5.0 + 128.0)) +'px';
 	// document.getElementById("earning_by_pump").innerHTML = "Max pumps = " + maxPumps + ", numPumps = " + numPumps;
-	document.getElementById("game_total_current_earning").innerHTML = "Total earned : $" + totalcurrentEarning.toFixed(2);
-	document.getElementById("game_last_balloon_earning").innerHTML = "Last balloon : $" + lastBalloonEarning.toFixed(2);
-	document.getElementById("remaining_balloons").innerHTML = "Remaining Balloons : " + (numOfTrials - balloonIndex + 1).toString();
+	document.getElementById("game_total_current_earning").innerHTML = "Total earned: $" + totalcurrentEarning.toFixed(2);
+	document.getElementById("game_last_balloon_earning").innerHTML = "Last balloon: $" + lastBalloonEarning.toFixed(2);
+	document.getElementById("game_last_balloon_pumps").innerHTML = "Last balloon # pumps: "+ lastNumPumps;
+	document.getElementById("game_curr_balloon_pumps").innerHTML = "Current balloon # pumps: "+ numPumps;
+	document.getElementById("remaining_balloons").innerHTML = "Remaining Balloons: " + (numOfTrials - balloonIndex + 1).toString();
 }
 
-function buttonClickedPumpBalloon() {
+function buttonClickedPumpBalloon(version) {
 	if(numPumps == 0) time_befFirstPump = dateDifferenceMinSecMil(date_befFirstPump,new Date());
 	date_betwLastPumpAndCollect = new Date();
 
@@ -121,11 +130,11 @@ function buttonClickedPumpBalloon() {
 		balloonExploded = true;
 		totalExplodedBalloons++;
 		currentBalloonEarning = 0;
-		balloonFinished();
+		balloonFinished(version);
 	}
 }
 
-function buttonClickedCollectMoney() {
+function buttonClickedCollectMoney(version) {
 	if(numPumps != 0) {
 		time_betwLastPumpAndCollect = dateDifferenceMinSecMil(date_betwLastPumpAndCollect,new Date());
 	} else {
@@ -133,10 +142,10 @@ function buttonClickedCollectMoney() {
 	}
 
 	totalcurrentEarning += currentBalloonEarning;
-	balloonFinished();
+	balloonFinished(version);
 }
 
-function balloonFinished() {
+function balloonFinished(version) {
 	date_balloon_end = new Date();
 
 	lastBalloonEarning = currentBalloonEarning;
@@ -146,7 +155,22 @@ function balloonFinished() {
 		totalNumPumpsForNonExplodedBalloons += numPumps;
 		alert("You have earned $" + currentBalloonEarning.toFixed(2) + " total for this balloon.");
 	} else {
-		alert("The balloon exploded ! You have earned $" + currentBalloonEarning.toFixed(2) + " total for this balloon.");
+		if (version == 1) {
+			// No penalty
+			alert("The balloon exploded! You have earned $" + currentBalloonEarning.toFixed(2) + " total for this balloon.");
+		} else if (version == 2) {
+			// Fixed penalty
+			totalcurrentEarning -= explode_penalty
+			lastBalloonEarning = -explode_penalty;
+			alert("The balloon exploded! You lost $" + explode_penalty.toFixed(2) + " for this balloon.");
+		} else if (version == 3) {
+			// Proportional penalty
+			let prop_penalty = explode_penalty_per_pump * numPumps
+			totalcurrentEarning -= prop_penalty
+			lastBalloonEarning = -prop_penalty;
+			alert("The balloon exploded! You lost $" + prop_penalty.toFixed(2) + " for this balloon.");
+
+		}
 	}
 	appendBalloonDataToIndividualBuffer();
 
@@ -176,11 +200,11 @@ function buttonClickedFinishExperiment() {
 	displayPart5();
 }
 
-function buttonClickedExitGame() {
-	if (confirm('Are you sure you want to exit the game?')) {
-		finishGame();
-	}
-}
+// function buttonClickedExitGame() {
+// 	if (confirm('Are you sure you want to exit the game?')) {
+// 		finishGame();
+// 	}
+// }
 
 function pad(num, size) {
     var s = num+"";
