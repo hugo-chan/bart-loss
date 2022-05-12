@@ -192,18 +192,15 @@ function balloonFinished(version) {
 	appendBalloonDataToIndividualBuffer();
 
 	if(balloonIndex < numOfTrials) {
-		console.log("ye");
 		startNewBalloon();
 	}
 	else {
-		console.log("ye2");
 		finishGame();
 	}
 }
 
 function finishGame() {
 	
-	console.log("ye3");
 	totalFinalEarning = totalcurrentEarning;
 	displayPart4();
 }
