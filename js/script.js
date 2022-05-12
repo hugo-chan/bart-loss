@@ -2,27 +2,26 @@
 
 var pID = -1;
 // Earnings
-var totalcurrentEarning = 0;
+var totalcurrentEarning = 5;
 var totalFinalEarning = 0;
 var currentBalloonEarning = 0;
 var lastBalloonEarning = 0;
 var earningPerPump = 0.05;
 // Random process
-var numOfTrialTypes = 3;
-var maxRandList = [8, 32, 128];
-var maxRand;
+var numOfTrialTypes = 1;
 var balloonImageList = ["blueBalloon.png", "redBalloon.png", "greenBalloon.png"];
 var balloonImage;
-var trialList = [];
 // var numOfTrials = 1;
 var numOfTrials = 8;
 var trialTypeIndex;
 var trialIndex = 0;
 // Balloons
 var maxPumps;
+var maxPumpsList = [5, 7, 4, 8, 9, 4, 5, 5]
 var balloonExploded = false;
 var totalExplodedBalloons = 0;
 var numPumps = 0;
+var lastNumPumps = 0;
 var totalNumPumps = 0;
 var totalNumPumpsForNonExplodedBalloons = 0;
 var numBalloonsCompleted = 0;
@@ -39,57 +38,37 @@ var date_befFirstPump;
 var time_befFirstPump;
 var date_betwLastPumpAndCollect;
 var time_betwLastPumpAndCollect;
+var balloonIndex = 0;
+
+// Case 2
+var explode_penalty = 0.2
+// Case 3
+var explode_penalty_per_pump = 0.05
 
 // Others
 var taskCompleted=0;
 
 
-
-// function GetKey(event){
-// 	var key_space = 32;
-// 	var key_return = 13;
-
-// 	if (event.keyCode == key_space && document.getElementById("game").style.display == 'block'){
-//  		buttonClickedPumpBalloon();
-// 	}
-// 	else if (event.keyCode == key_return && document.getElementById("game").style.display == 'block'){
-//  		buttonClickedCollectMoney();
-// 	}
-// }
-
-
 // Pre-condition : a should be less than b
 function randInt(a,b) { return Math.floor((Math.random() * b) + a); }
-
-function populateTrialList() {
-	for (i = 0; i < numOfTrials; i++) {
-		trialList.push(Math.floor(i*numOfTrialTypes/numOfTrials));
-	}
-}
-
 
 
 $( document ).ready(start);
 
 function start() {
 	console.log( "ready" );
-	populateTrialList();
 
-	displayPart1();
+	displayPart2();
 }
 
 function setBalloonInitialState() {
-	// Random process without replacement to choose the trial type
-	var i = randInt(0,trialList.length-1);
-	trialTypeIndex = trialList[i];
-	trialList.splice(i,1);
-	// Get trial variables
-	maxRand = maxRandList[trialTypeIndex];
-	balloonImage = balloonImageList[trialTypeIndex];
+	balloonImage = balloonImageList[balloonIndex % 3];
 	// Random process with replacement to choose the max of pump for that balloon
-	maxPumps = randInt(1,maxRand);
+	maxPumps = maxPumpsList[balloonIndex];
+	balloonIndex++;
 
 	currentBalloonEarning = 0;
+	lastNumPumps = numPumps
 	numPumps = 0;
 	balloonExploded = false;
 	updateGameUI();
@@ -116,7 +95,6 @@ function buttonClickedSendID() {
 }
 
 function startNewBalloon() {
-	trialIndex++;
 	// Start the balloon game
 	setBalloonInitialState();
 
@@ -128,33 +106,52 @@ function buttonClickedStartGame() {
 	startNewBalloon();
 }
 
-function updateGameUI() {
-	var image = document.getElementById("img_balloon");
-	image.src = "img/" + balloonImage;
-	image.style.width = 'auto';
-	image.style.height = Math.round( 2.0/3.0 * screen.height * (5 + numPumps) / (5.0 + 128.0)) +'px';
-	// document.getElementById("earning_by_pump").innerHTML = "Max pumps = " + maxPumps + ", numPumps = " + numPumps;
-	document.getElementById("game_total_current_earning").innerHTML = "Total earned : $" + totalcurrentEarning.toFixed(2);
-	document.getElementById("game_last_balloon_earning").innerHTML = "Last balloon : $" + lastBalloonEarning.toFixed(2);
-	document.getElementById("remaining_balloons").innerHTML = "Remaining Balloons : " + (numOfTrials - trialIndex + 1).toString();
+String.prototype.leftJustify = function( length, char ) {
+    var fill = [];
+    while ( fill.length + this.length < length ) {
+      fill[fill.length] = char;
+    }
+    return fill.join('') + this;
 }
 
-function buttonClickedPumpBalloon() {
+String.prototype.rightJustify = function( length, char ) {
+    var fill = [];
+    while ( fill.length + this.length < length ) {
+      fill[fill.length] = char;
+    }
+    return this + fill.join('');
+}
+
+function updateGameUI() {
+	var image = document.getElementById("img_balloon");
+	image.src = "../img/" + balloonImage;
+	image.style.width = 'auto';
+	image.style.height = Math.round( 2.0/3.0 * screen.height * (10 + numPumps) / (5.0 + 128.0)) +'px';
+	// document.getElementById("earning_by_pump").innerHTML = "Max pumps = " + maxPumps + ", numPumps = " + numPumps;
+	document.getElementById("game_total_current_earning").innerHTML = "Total earned: $" + totalcurrentEarning.toFixed(2);
+	document.getElementById("game_last_balloon_earning").innerHTML = "Last balloon: $" + lastBalloonEarning.toFixed(2);
+	document.getElementById("game_last_balloon_pumps").innerHTML = "Last balloon # pumps: "+ lastNumPumps;
+	document.getElementById("game_curr_balloon_pumps").innerHTML = "Current balloon # pumps: "+ numPumps;
+	document.getElementById("remaining_balloons").innerHTML = "Remaining Balloons: " + (numOfTrials - balloonIndex + 1).toString();
+}
+
+function buttonClickedPumpBalloon(version) {
 	if(numPumps == 0) time_befFirstPump = dateDifferenceMinSecMil(date_befFirstPump,new Date());
 	date_betwLastPumpAndCollect = new Date();
 
-	if(++numPumps <= maxPumps) {
+	++numPumps;
+	updateGameUI();
+	if(numPumps <= maxPumps) {
 		currentBalloonEarning += earningPerPump;
-		updateGameUI();
 	} else {
 		balloonExploded = true;
 		totalExplodedBalloons++;
 		currentBalloonEarning = 0;
-		balloonFinished();
+		setTimeout(balloonFinished, 10, version); // to instantly refresh
 	}
 }
 
-function buttonClickedCollectMoney() {
+function buttonClickedCollectMoney(version) {
 	if(numPumps != 0) {
 		time_betwLastPumpAndCollect = dateDifferenceMinSecMil(date_betwLastPumpAndCollect,new Date());
 	} else {
@@ -162,10 +159,10 @@ function buttonClickedCollectMoney() {
 	}
 
 	totalcurrentEarning += currentBalloonEarning;
-	balloonFinished();
+	balloonFinished(version);
 }
 
-function balloonFinished() {
+function balloonFinished(version) {
 	date_balloon_end = new Date();
 
 	lastBalloonEarning = currentBalloonEarning;
@@ -175,11 +172,26 @@ function balloonFinished() {
 		totalNumPumpsForNonExplodedBalloons += numPumps;
 		alert("You have earned $" + currentBalloonEarning.toFixed(2) + " total for this balloon.");
 	} else {
-		alert("The balloon exploded ! You have earned $" + currentBalloonEarning.toFixed(2) + " total for this balloon.");
+		if (version == 1) {
+			// No penalty
+			alert("The balloon exploded! You have earned $" + currentBalloonEarning.toFixed(2) + " total for this balloon.");
+		} else if (version == 2) {
+			// Fixed penalty
+			totalcurrentEarning -= explode_penalty
+			lastBalloonEarning = -explode_penalty;
+			alert("The balloon exploded! You lost $" + explode_penalty.toFixed(2) + " for this balloon.");
+		} else if (version == 3) {
+			// Proportional penalty
+			let prop_penalty = explode_penalty_per_pump * numPumps
+			totalcurrentEarning -= prop_penalty
+			lastBalloonEarning = -prop_penalty;
+			alert("The balloon exploded! You lost $" + prop_penalty.toFixed(2) + " for this balloon.");
+
+		}
 	}
 	appendBalloonDataToIndividualBuffer();
 
-	if(trialIndex < numOfTrials) {
+	if(balloonIndex < numOfTrials) {
 		startNewBalloon();
 	}
 	else {
@@ -205,11 +217,11 @@ function buttonClickedFinishExperiment() {
 	displayPart5();
 }
 
-function buttonClickedExitGame() {
-	if (confirm('Are you sure you want to exit the game?')) {
-		finishGame();
-	}
-}
+// function buttonClickedExitGame() {
+// 	if (confirm('Are you sure you want to exit the game?')) {
+// 		finishGame();
+// 	}
+// }
 
 function pad(num, size) {
     var s = num+"";
@@ -232,8 +244,7 @@ function paddedDateHMS(date) {
 function appendBalloonDataToIndividualBuffer() {
 	// Data regarding one balloon
 	balloondata2send += pad(pID,3) + ",";
-	balloondata2send += trialIndex + ",";
-	balloondata2send += maxRand + ",";
+	balloondata2send += balloonIndex + ",";
 	balloondata2send += maxPumps + ",";
 	balloondata2send += numPumps + ",";
 	balloondata2send += balloonExploded + ",";
