@@ -351,17 +351,6 @@ function sendBalloonData2() {
 	  
 }
 
-function displayPart1() {
-	console.log( "part1 : setup" );
-
-	document.getElementById("exit_game").style.display = 'none';
-
-	document.getElementById("setup").style.display = 'block';
-	document.getElementById("instructions").style.display = 'none';
-	document.getElementById("game").style.display = 'none';
-	document.getElementById("thankYou").style.display = 'none';
-}
-
 function displayPart2() {
 	console.log( "part2 : Instructions" );
 
@@ -386,7 +375,6 @@ function displayPart3() {
 
 function displayPart4() {
 	console.log( "part4 : End of game" );
-
 
 	document.getElementById("setup").style.display = 'none';
 	document.getElementById("instructions").style.display = 'none';
