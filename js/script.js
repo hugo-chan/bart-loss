@@ -192,14 +192,18 @@ function balloonFinished(version) {
 	appendBalloonDataToIndividualBuffer();
 
 	if(balloonIndex < numOfTrials) {
+		console.log("ye");
 		startNewBalloon();
 	}
 	else {
+		console.log("ye2");
 		finishGame();
 	}
 }
 
 function finishGame() {
+	
+	console.log("ye3");
 	totalFinalEarning = totalcurrentEarning;
 	displayPart4();
 }
@@ -386,7 +390,6 @@ function displayPart3() {
 function displayPart4() {
 	console.log( "part4 : End of game" );
 
-	document.getElementById("exit_game").style.display = 'none';
 
 	document.getElementById("setup").style.display = 'none';
 	document.getElementById("instructions").style.display = 'none';
