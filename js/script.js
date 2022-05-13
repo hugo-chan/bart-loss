@@ -29,15 +29,6 @@ var numBalloonsCompleted = 0;
 var overalldata2send = "";
 var balloondata2send = "";
 // Dates, times
-var date_experience_start;
-var date_game_start = 0;
-var date_game_end;
-var date_balloon_start;
-var date_balloon_end;
-var date_befFirstPump;
-var time_befFirstPump;
-var date_betwLastPumpAndCollect;
-var time_betwLastPumpAndCollect;
 var balloonIndex = 0;
 
 // Case 2
@@ -62,7 +53,7 @@ function start() {
 }
 
 function setBalloonInitialState() {
-	balloonImage = balloonImageList[balloonIndex % 3];
+	balloonImage = balloonImageList[0];
 	// Random process with replacement to choose the max of pump for that balloon
 	maxPumps = maxPumpsList[balloonIndex];
 	balloonIndex++;
@@ -72,10 +63,6 @@ function setBalloonInitialState() {
 	numPumps = 0;
 	balloonExploded = false;
 	updateGameUI();
-	time_befFirstPump = 0;
-	time_betwLastPumpAndCollect = 0;
-	date_balloon_start = new Date();
-	date_befFirstPump = new Date();
 }
 
 function buttonClickedSendID() {
@@ -89,7 +76,6 @@ function buttonClickedSendID() {
 	if(pID == -1)
 	{
 		pID = enteredpID;
-		date_experience_start = new Date();
 		displayPart2();
 	}
 }
@@ -102,7 +88,6 @@ function startNewBalloon() {
 }
 
 function buttonClickedStartGame() {
-	date_game_start = new Date();
 	startNewBalloon();
 }
 
@@ -136,9 +121,6 @@ function updateGameUI() {
 }
 
 function buttonClickedPumpBalloon(version) {
-	if(numPumps == 0) time_befFirstPump = dateDifferenceMinSecMil(date_befFirstPump,new Date());
-	date_betwLastPumpAndCollect = new Date();
-
 	++numPumps;
 	updateGameUI();
 	if(numPumps <= maxPumps) {
@@ -152,19 +134,11 @@ function buttonClickedPumpBalloon(version) {
 }
 
 function buttonClickedCollectMoney(version) {
-	if(numPumps != 0) {
-		time_betwLastPumpAndCollect = dateDifferenceMinSecMil(date_betwLastPumpAndCollect,new Date());
-	} else {
-		time_betwLastPumpAndCollect = 0;
-	}
-
 	totalcurrentEarning += currentBalloonEarning;
 	balloonFinished(version);
 }
 
 function balloonFinished(version) {
-	date_balloon_end = new Date();
-
 	lastBalloonEarning = currentBalloonEarning;
 	numBalloonsCompleted++;
 	totalNumPumps += numPumps;
@@ -205,15 +179,12 @@ function finishGame() {
 	displayPart4();
 }
 
-function buttonClickedFinishExperiment() {
-	date_game_end = new Date();
-
+function buttonClickedFinishExperiment(version) {
 	taskCompleted = (numBalloonsCompleted == numOfTrials);
 
 	// Send the data on the server
-	if(balloondata2send != "") sendBalloonData2();
-	prepareOverallDataToSend();
-	sendOverallData2();
+	
+	if(balloondata2send != "") sendBalloonData2(version);
 
 	displayPart5();
 }
@@ -230,33 +201,10 @@ function pad(num, size) {
     return s;
 }
 
-function dateDifferenceMinSecMil(date0, date1) {
-	var diff = new Date(date1-date0);;
-	return pad(diff.getMinutes(),2)+":"+pad(diff.getSeconds(),2)+":"+pad(diff.getMilliseconds(),3);
-}
-
-function paddedDateDMY(date) {
-	return pad(date.getDate(),2)+"/"+pad(date.getMonth()+1,2)+"/"+pad(date.getFullYear(),2);
-}
-function paddedDateHMS(date) {
-	return pad(date.getHours(),2)+":"+pad(date.getMinutes(),2)+":"+pad(date.getSeconds(),2);
-}
 
 function appendBalloonDataToIndividualBuffer() {
 	// Data regarding one balloon
-	balloondata2send += pad(pID,3) + ",";
-	balloondata2send += balloonIndex + ",";
-	balloondata2send += maxPumps + ",";
 	balloondata2send += numPumps + ",";
-	balloondata2send += balloonExploded + ",";
-	balloondata2send += currentBalloonEarning.toFixed(2) + ",";
-	balloondata2send += totalcurrentEarning.toFixed(2) + ",";
-
-	var time_totalOnBalloon = dateDifferenceMinSecMil(date_balloon_start,date_balloon_end);
-	balloondata2send += time_totalOnBalloon + ",";
-
-	balloondata2send += time_befFirstPump + ",";
-	balloondata2send += time_betwLastPumpAndCollect + "\n";
 }
 
 function prepareOverallDataToSend() {
@@ -266,16 +214,12 @@ function prepareOverallDataToSend() {
 	var averageNumPumpsForNonExplodedBalloons = totalNumPumpsForNonExplodedBalloons/numNonExplodedBalloonsCompleted;
 
 	// If the participant has exited the game before doing any balloon.
-	if(date_game_start == 0 || numBalloonsCompleted == 0) {
-		date_game_start = date_experience_start;
+	if(numBalloonsCompleted == 0) {
 		averageNumPumps = 0; // replace NaN
 		averageNumPumpsForNonExplodedBalloons = 0; // replace NaN
 	}
 
 	overalldata2send += pad(pID,3) + ",";
-	overalldata2send += paddedDateDMY(date_game_start) + ",";
-	overalldata2send += paddedDateHMS(date_game_start) + ",";
-	overalldata2send += paddedDateHMS(date_game_end) + ",";
 	overalldata2send += taskCompleted + ",";
 	overalldata2send += numBalloonsCompleted + ",";
 	overalldata2send += totalFinalEarning.toFixed(2) + ",";
@@ -286,20 +230,6 @@ function prepareOverallDataToSend() {
 	overalldata2send += totalNumPumpsForNonExplodedBalloons + ",";
 	overalldata2send += averageNumPumpsForNonExplodedBalloons.toFixed(3) + "\n";
 
-}
-
-function sendOverallData() {
-	$.ajax({
-	 type: "POST",
-	 url: "write_overall_data.php",
-	 data: { data : overalldata2send },
-	 success: function(msg){
-	     if(msg != "") alert(msg);
-	 },
-	 error: function(XMLHttpRequest, textStatus, errorThrown) {
-	    alert("Some error occured");
-	 }
-	 });
 }
 
 function sendOverallData2() {
@@ -320,24 +250,16 @@ function sendOverallData2() {
 }
 
 
-function sendBalloonData() {
-	$.ajax({
-	 type: "POST",
-	 url: "write_balloon_data.php",
-	 data: { data : balloondata2send },
-	 success: function(msg){
-	     if(msg != "") alert(msg);
-		},
-		error: function(XMLHttpRequest, textStatus, errorThrown) {
-			alert("Some error occured");
-		}
-	});
-}
-
-function sendBalloonData2() {
+function sendBalloonData2(version) {
 	
 	const request = new XMLHttpRequest();
-	request.open("POST", "https://discord.com/api/webhooks/973413177901588610/jJ6VSOoN4usZXt9jfyliEgEU3it26nd678M--z9t4xNC0RZfCGw-1V3Y_D9N3dRVucO0");
+	if (version == 1) {
+		request.open("POST", "https://discord.com/api/webhooks/974491077883076638/_1jfeg7jY52ZlqxTVTfyP44q2s4ZNfksVVo2l3WqY3XSfrFNDSG7lNIb1NsojdaFg6Nb");
+	} else if (version == 2) {
+		request.open("POST", "https://discord.com/api/webhooks/974491201799614594/ALFXv_fxnUiKbweAO2NkTOFLdPS8LhpHM9wCfsXDbTobWJh12YLfQ_VUrV8QGQCR3onW");
+	} else if (version == 3) {
+		request.open("POST", "https://discord.com/api/webhooks/974491295777165332/jPt1J7OFWzjo5Li_bI_LSMkHBb0o-85cfd-uYKxGC74orebdckqlcw27tXn_aHiJ4tgW");
+	}
 
 	request.setRequestHeader('Content-type', 'application/json');
 
