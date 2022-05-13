@@ -12,12 +12,14 @@ var numOfTrialTypes = 1;
 var balloonImageList = ["blueBalloon.png", "redBalloon.png", "greenBalloon.png"];
 var balloonImage;
 // var numOfTrials = 1;
-var numOfTrials = 8;
+// var numOfTrials = 8;
+var numOfTrials = 12;
 var trialTypeIndex;
 var trialIndex = 0;
 // Balloons
 var maxPumps;
-var maxPumpsList = [5, 7, 4, 8, 9, 4, 5, 5]
+// var maxPumpsList = [5, 7, 4, 8, 9, 4, 5, 5]
+var maxPumpsList = [12, 15, 6, 6, 8, 5, 4, 9, 9, 11, 5, 4]
 var balloonExploded = false;
 var totalExplodedBalloons = 0;
 var numPumps = 0;
