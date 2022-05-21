@@ -1,6 +1,3 @@
-// Configure the game
-
-var pID = -1;
 // Earnings
 var totalcurrentEarning = 5;
 var totalFinalEarning = 0;
@@ -11,14 +8,11 @@ var earningPerPump = 0.05;
 var numOfTrialTypes = 1;
 var balloonImageList = ["blueBalloon.png", "redBalloon.png", "greenBalloon.png"];
 var balloonImage;
-// var numOfTrials = 1;
-// var numOfTrials = 8;
 var numOfTrials = 12;
 var trialTypeIndex;
 var trialIndex = 0;
 // Balloons
 var maxPumps;
-// var maxPumpsList = [5, 7, 4, 8, 9, 4, 5, 5]
 var maxPumpsList = [12, 15, 6, 6, 8, 5, 4, 9, 9, 11, 5, 4]
 var balloonExploded = false;
 var totalExplodedBalloons = 0;
@@ -42,10 +36,6 @@ var explode_penalty_per_pump = 0.05
 var taskCompleted=0;
 
 
-// Pre-condition : a should be less than b
-function randInt(a,b) { return Math.floor((Math.random() * b) + a); }
-
-
 $( document ).ready(start);
 
 function start() {
@@ -65,21 +55,6 @@ function setBalloonInitialState() {
 	numPumps = 0;
 	balloonExploded = false;
 	updateGameUI();
-}
-
-function buttonClickedSendID() {
-
-	enteredpID = document.getElementById("id_number").value;
-	// If ID entered is invalid
-	if( enteredpID == "" || enteredpID < 0 || enteredpID > 1000 || isNaN(enteredpID)) {
-		alert("Incorrect ID number. Please re-enter it.");
-		return;
-	}
-	if(pID == -1)
-	{
-		pID = enteredpID;
-		displayPart2();
-	}
 }
 
 function startNewBalloon() {
@@ -191,12 +166,6 @@ function buttonClickedFinishExperiment(version) {
 	displayPart5();
 }
 
-// function buttonClickedExitGame() {
-// 	if (confirm('Are you sure you want to exit the game?')) {
-// 		finishGame();
-// 	}
-// }
-
 function pad(num, size) {
     var s = num+"";
     while (s.length < size) s = "0" + s;
@@ -207,31 +176,6 @@ function pad(num, size) {
 function appendBalloonDataToIndividualBuffer() {
 	// Data regarding one balloon
 	balloondata2send += numPumps + ",";
-}
-
-function prepareOverallDataToSend() {
-
-	var averageNumPumps = totalNumPumps/numBalloonsCompleted;
-	var numNonExplodedBalloonsCompleted = numBalloonsCompleted - totalExplodedBalloons;
-	var averageNumPumpsForNonExplodedBalloons = totalNumPumpsForNonExplodedBalloons/numNonExplodedBalloonsCompleted;
-
-	// If the participant has exited the game before doing any balloon.
-	if(numBalloonsCompleted == 0) {
-		averageNumPumps = 0; // replace NaN
-		averageNumPumpsForNonExplodedBalloons = 0; // replace NaN
-	}
-
-	overalldata2send += pad(pID,3) + ",";
-	overalldata2send += taskCompleted + ",";
-	overalldata2send += numBalloonsCompleted + ",";
-	overalldata2send += totalFinalEarning.toFixed(2) + ",";
-	overalldata2send += totalNumPumps + ",";
-	overalldata2send += averageNumPumps.toFixed(3) + ",";
-	overalldata2send += totalExplodedBalloons + ",";
-	overalldata2send += numNonExplodedBalloonsCompleted + ",";
-	overalldata2send += totalNumPumpsForNonExplodedBalloons + ",";
-	overalldata2send += averageNumPumpsForNonExplodedBalloons.toFixed(3) + "\n";
-
 }
 
 function sendOverallData2() {
@@ -250,7 +194,6 @@ function sendOverallData2() {
 	request.send(JSON.stringify(params));
 	  
 }
-
 
 function sendBalloonData2(version) {
 	
@@ -278,9 +221,6 @@ function sendBalloonData2(version) {
 function displayPart2() {
 	console.log( "part2 : Instructions" );
 
-	// document.getElementById("exit_game").style.display = 'block';
-
-	document.getElementById("setup").style.display = 'none';
 	document.getElementById("instructions").style.display = 'block';
 	document.getElementById("game").style.display = 'none';
 	document.getElementById("thankYou").style.display = 'none';
@@ -289,7 +229,6 @@ function displayPart2() {
 function displayPart3() {
 	console.log( "part3 : BART" );
 
-	document.getElementById("setup").style.display = 'none';
 	document.getElementById("instructions").style.display = 'none';
 	document.getElementById("game").style.display = 'block';
 	document.getElementById("thankYou").style.display = 'none';
@@ -300,7 +239,6 @@ function displayPart3() {
 function displayPart4() {
 	console.log( "part4 : End of game" );
 
-	document.getElementById("setup").style.display = 'none';
 	document.getElementById("instructions").style.display = 'none';
 	document.getElementById("game").style.display = 'block';
 	document.getElementById("thankYou").style.display = 'none';
@@ -313,7 +251,6 @@ function displayPart4() {
 function displayPart5() {
 	console.log( "part5 : Thank you" );
 
-	document.getElementById("setup").style.display = 'none';
 	document.getElementById("instructions").style.display = 'none';
 	document.getElementById("game").style.display = 'none';
 	document.getElementById("thankYou").style.display = 'block';

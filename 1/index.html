@@ -47,29 +47,6 @@
       <!-- <div class="col-md-7"></div> -->
     </div>
 
-    <div id="setup" class="container-fluid">
-
-      <div class="row">
-       <div class="col-md-4"></div>
-
-      <!-- TODO : Way to make sure the participant enters it without mistakes -->
-        <div class="col-md-4" >
-          <br>
-          <p id="enterID"> Please enter your 3-digit ID number (123 for testing purposes):</p>
-
-          <div class="input-group">
-            <input type="text" class="form-control" placeholder="Your Id ..." id="id_number">
-            <span class="input-group-btn">
-              <button class="btn btn-default" type="button" id="send_id" onclick="buttonClickedSendID()">Let's Go</button>
-            </span>
-          </div><!-- /input-group -->
-        </div><!-- /.col-lg-6 -->
-      </div><!-- /.row -->
-
-    </div>
-
-
-
     <div id="instructions" class="row">
 
         <div class="col-md-3"></div>
@@ -156,17 +133,6 @@
       </div>
     </div>
 
-    <!-- Authentication process -->
-    <?php
-    session_start();
-    $csrfToken = md5(uniqid(mt_rand(),true)); // Token generation updated, as suggested by The Rook. Thanks!
-    echo $csrfToken;
-    $_SESSION['csrfToken'] = $token;
-    ?>
-
-    <form action="formHandler.php">
-       <input type="hidden" name="csrfKey" value="<?php echo $csrfToken ?>" />
-    </form>
 
   </div>
   </body>
