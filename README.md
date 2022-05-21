@@ -1,4 +1,8 @@
-Balloon analogue risk task with loss mechanisms. Three versions of the task:
+# Loss Aversion and Risk Propensity in Variations of the Balloon Analogue Risk Task (BART) #
+## BUSN 20710: Behavioral Economics ##
+### Hugo Chan + Emily Lin ###
+
+Three versions of the task:
 1. No loss
 2. Fixed loss
 3. Proportional loss
