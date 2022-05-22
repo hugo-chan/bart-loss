@@ -196,7 +196,7 @@ function sendOverallData2() {
 }
 
 function sendBalloonData2(version) {
-	
+	// These discord webhooks are deprecated, generate and add yours below
 	const request = new XMLHttpRequest();
 	if (version == 1) {
 		request.open("POST", "https://discord.com/api/webhooks/974491077883076638/_1jfeg7jY52ZlqxTVTfyP44q2s4ZNfksVVo2l3WqY3XSfrFNDSG7lNIb1NsojdaFg6Nb");
