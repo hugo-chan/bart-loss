@@ -155,7 +155,7 @@ plt.legend()
 plt.xticks(np.arange(1, 13, 1.0))
 plt.ylabel("Number of pumps")
 plt.xlabel("Balloon number")
-plt.title("Number of Pumps by Balloon by Treatment +/-1SD")
+plt.title("Average Number of Pumps by Balloon by Treatment +/-1SD")
 plt.show()
 
 #%%
@@ -218,6 +218,7 @@ ax.plot(
 )
 ax.legend()
 plt.xticks(np.arange(1, 13, 1.0))
+ax.set_xlabel("Balloon number")
 ax.set_ylabel("Exploded by % players")
 ax2.set_ylabel("Breakpoints")
 plt.xlabel("Balloon number")
@@ -490,3 +491,13 @@ surplus = surplus_merged.groupby("treatment").mean()
 surplus["Average"] = surplus.mean(axis=1)
 print("surplus", surplus)
 # surplus.to_csv("surplus.csv")
+#%%
+# Duration of games
+duration = pd.read_csv("duration.csv", header=0)
+plt.figure(figsize=(8, 5))
+boxp = plt.boxplot(duration["Duration (in seconds)"], labels=[""], showmeans=True, meanline=True)
+plt.legend([boxp['medians'][0], boxp['means'][0]], [f'median: {int(np.median(duration["Duration (in seconds)"]))}', f'mean: {int(np.mean(duration["Duration (in seconds)"]))}'])
+plt.ylabel("Seconds")
+plt.title("Duration of Qualtrics Survey Completion")
+
+# %%
