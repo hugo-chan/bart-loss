@@ -10,3 +10,5 @@ Three versions of the task:
 Sequnece of breakpoints determined a priori rather than randomly generated around a fixed mean.
 
 Repo forked from @matthieuheitz.
+
+Try it yourself: https://hugochan.xyz/bart-loss/ (hopefully I still own the domain)
